@@ -67,9 +67,9 @@ export default function PortfolioPage(){
    {order.map(sec=>groups[sec]?.length>0&&
     <section id={sec} key={sec} className={"content-section section-"+sec}>
      <SectionHeading
-      kicker={sectionLabels[sec]}
-      title={sec==="highlights"?"Field Impact & Capacity Building":sec==="projects"?"Selected Projects":sec==="research"?"Research Interests":sec==="experience"?"Professional Experience":sectionLabels[sec]}
-      text={sec==="highlights"?"Selected highlights from field assignments, international development work, and geospatial capacity building across Nepal.":sec==="projects"?"Selected research and applied geospatial work.":sec==="research"?"Current and emerging areas of academic and technical interest.":sec==="experience"?"Professional work across research, international development, disaster risk reduction, and geospatial consulting.":undefined}
+      kicker={({highlights:"Career Highlights",current_roles:"Now",projects:"Portfolio",research:"Research Agenda",experience:"Career",education:"Academic Background",publications:"Research Output",certifications:"Credentials",training:"Continuous Learning",awards:"Recognition"})[sec]}
+      title={sec==="highlights"?"Field Impact & Capacity Building":sec==="projects"?"Selected Projects":sec==="research"?"Research Interests":sec==="experience"?"Professional Experience":sec==="training"?"Training & Professional Development":sectionLabels[sec]}
+      text={sec==="highlights"?"Selected highlights from field assignments, international development work, and geospatial capacity building across Nepal.":sec==="projects"?"Selected research and applied geospatial work.":sec==="research"?"Current and emerging areas of academic and technical interest.":sec==="experience"?"Professional work across research, international development, disaster risk reduction, and geospatial consulting.":sec==="training"?"Focused learning in research, data, analytics, responsible information management, and project delivery.":undefined}
      />
      {sec==="highlights"?<div className="highlight-grid">
       {groups[sec].map((i,index)=><article className="highlight-card" key={i.id}>
