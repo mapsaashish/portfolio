@@ -313,3 +313,23 @@ button{cursor:pointer}
  .training-mark{width:46px;height:46px;border-radius:10px}
  .training-top{align-items:flex-start;flex-direction:column;gap:5px}
 }
+
+
+/* Compact training refinement */
+.section-training .grid.two{gap:10px}
+.training-card{grid-template-columns:40px minmax(0,1fr);gap:13px;align-items:center;min-height:0;padding:15px 17px;border-radius:8px}
+.training-mark{width:40px;height:40px;border-radius:10px;background:#e7f3f2;box-shadow:none;border:1px solid #c9e1df}
+.training-mark span{color:var(--teal);font-family:Arial,sans-serif;font-size:1rem;font-weight:900;letter-spacing:0}
+.training-top{margin-bottom:5px}
+.training-card h3{font-size:.94rem;line-height:1.32}
+.training-card p{margin-top:6px;font-size:.73rem}
+.simple-footer{display:flex!important;justify-content:center!important;align-items:center!important;gap:10px!important;padding:18px 24px!important;background:#0d3046!important;color:#dce8ec!important;font-size:.74rem!important;letter-spacing:.01em}
+.simple-footer span{color:#fff;font-weight:750}
+.simple-footer i{color:#6f929f;font-style:normal}
+.simple-footer a{color:#dce8ec!important}
+.simple-footer a:hover{color:#8bd0c9!important}
+@media(max-width:560px){
+ .simple-footer{gap:7px!important;flex-wrap:wrap;text-align:center}
+ .simple-footer i{display:none}
+ .simple-footer span,.simple-footer a{width:100%}
+}
