@@ -134,6 +134,20 @@ button{cursor:pointer}
 .profile-form{max-width:900px}
 .profile-form .btn{width:max-content}
 
+
+.sort-help{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 16px;padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:#fff;color:#5f6b76;font-size:.78rem}
+.sort-help b{color:var(--ink);font-family:Georgia,"Times New Roman",serif;font-size:.95rem}
+.sort-help small{margin-left:auto;color:var(--blue);font-weight:700}
+.admin-list article.skill-sortable{grid-template-columns:minmax(260px,1fr) auto auto auto auto;cursor:grab;transition:opacity .15s ease,transform .15s ease,box-shadow .15s ease}
+.admin-list article.skill-sortable:active{cursor:grabbing}
+.admin-list article.skill-sortable.dragging{opacity:.45;transform:scale(.995);box-shadow:0 6px 20px rgba(23,50,77,.08)}
+.admin-item-title{display:flex!important;align-items:center;gap:10px}
+.admin-item-title>span:last-child{display:grid}
+.drag-handle{display:inline-flex;align-items:center;justify-content:center;color:#8a949d;font-weight:900;letter-spacing:-2px;user-select:none}
+.order-buttons{display:flex!important;gap:4px;padding:0!important}
+.order-buttons button{min-width:32px}
+.order-buttons button:disabled{opacity:.3;cursor:not-allowed}
+
 @media(max-width:1000px){
  .site-shell{width:min(920px,calc(100% - 32px));margin:16px auto}
  .topnav{padding:10px 36px}
@@ -143,6 +157,9 @@ button{cursor:pointer}
  .admin-shell{grid-template-columns:210px 1fr}
 }
 @media(max-width:760px){
+ .sort-help{align-items:flex-start;flex-direction:column}.sort-help small{margin-left:0}
+ .admin-list article.skill-sortable{grid-template-columns:1fr auto auto}
+ .drag-handle{display:none}
  body{background:#fff}
  .site-shell{width:100%;margin:0;border:0;box-shadow:none}
  .topnav{padding:9px 20px}
