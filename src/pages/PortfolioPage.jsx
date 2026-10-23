@@ -27,7 +27,7 @@ export default function PortfolioPage(){
     <a href="#research">Research</a>
     <a href="#experience">Experience</a>
     {gallery.length>0&&<a href="#gallery">Gallery</a>}
-    <a href="#contact">Contact</a>
+    <a href="#footer">Contact</a>
    </div>
   </nav>
 
@@ -106,20 +106,9 @@ export default function PortfolioPage(){
     </section>
    }
 
-   {(show("contact_heading")||show("contact_text")||(show("email")&&s.email)||(show("linkedin_url")&&s.linkedin_url))&&<section id="contact" className="contact">
-    <div>
-     <div className="eyebrow">CONTACT</div>
-     {show("contact_heading")&&<h2>{s.contact_heading||"Let's connect."}</h2>}
-     {show("contact_text")&&s.contact_text&&<p>{s.contact_text}</p>}
-    </div>
-    <div className="contact-actions">
-     {show("email")&&s.email&&<a className="btn primary" href={"mailto:"+s.email}>{s.email}</a>}
-     {show("linkedin_url")&&s.linkedin_url&&<a className="text-link" href={s.linkedin_url} target="_blank" rel="noreferrer">LinkedIn ↗</a>}
-    </div>
-   </section>}
   </main>
 
-  <footer><span>© {new Date().getFullYear()} {show("name")?(s.name||"Aashish Sharma"):"Portfolio"}</span><span>Geomatics · GIS · Remote Sensing</span><a href="?admin=1">Admin</a></footer>
+  <footer id="footer" className="simple-footer"><span>Aashish Sharma</span><i>|</i><a href="mailto:mapsaashish@gmail.com">mapsaashish@gmail.com</a><i>|</i><a href="tel:+15613986920">+1 561 398 6920</a></footer>
   {viewer&&<Lightbox items={viewer.items} index={viewer.index} onIndex={index=>setViewer(v=>({...v,index}))} onClose={()=>setViewer(null)}/>}
  </div>
 }
