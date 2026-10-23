@@ -219,3 +219,51 @@ button{cursor:pointer}
 .site-shell>footer a:hover{color:#fff}
 .content-card{transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease}
 .content-card:hover{border-color:#b8d2d3;box-shadow:0 8px 22px rgba(18,59,85,.07);transform:translateY(-1px)}
+
+
+/* Skills: clearer individual entries */
+.skill-entry-box{min-height:180px;line-height:1.55}
+.field-help{display:block;margin-top:2px;color:#71808a;font-size:.68rem;font-weight:500;line-height:1.4;text-transform:none}
+.skills-section .grid.two{gap:18px}
+.skills-section .content-card-skills{border-color:#cfe0e2;background:#fff}
+.skills-section .content-card-skills .content-card-body{padding:22px 23px}
+.skills-section .content-card-skills h3{margin:0 0 16px;padding-bottom:12px;border-bottom:1px solid #dce8e9;color:var(--navy);font-size:1.12rem}
+.skills-section .content-card-skills small{display:none}
+.skills-section .content-card-skills .tags{gap:8px;margin-top:0}
+.skills-section .content-card-skills .tags span{padding:7px 10px;border-color:#c8dedc;border-radius:999px;background:#edf6f5;color:#245f5c;font-size:.72rem;font-weight:700}
+
+/* Experience: compact branded professional timeline */
+.section-experience{background:#f5f8f9}
+.section-experience .grid.one{gap:16px}
+.section-experience .content-card-experience{position:relative;border:1px solid #d5e1e5!important;border-radius:10px!important;background:#fff;overflow:hidden;box-shadow:0 5px 18px rgba(18,59,85,.055)}
+.section-experience .content-card-experience::before{content:"";position:absolute;inset:0 auto 0 0;width:5px;background:linear-gradient(180deg,var(--teal),var(--navy))}
+.section-experience .content-card-experience:hover{border-color:#b8d2d3!important;box-shadow:0 9px 25px rgba(18,59,85,.09);transform:translateY(-1px)}
+.experience-card-body{padding:24px 26px 22px 30px!important}
+.experience-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:start}
+.experience-org{display:block;margin-bottom:5px;color:var(--teal);font-size:.72rem;font-weight:800;letter-spacing:.035em;text-transform:uppercase}
+.experience-head h3{margin:0!important;color:var(--ink);font-size:1.28rem!important;line-height:1.25}
+.experience-meta{display:grid;justify-items:end;gap:5px;min-width:145px;text-align:right}
+.experience-meta span{display:inline-flex;padding:5px 9px;border-radius:999px;background:#edf5f5;color:#2c6966;font-size:.7rem;font-weight:800;white-space:nowrap}
+.experience-meta small{margin:0!important;color:#73808a!important;font-size:.7rem!important}
+.experience-summary{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;max-width:780px;margin:15px 0 0!important;color:#566873!important;font-size:.84rem!important;line-height:1.62!important}
+.experience-details{margin-top:16px;border-top:1px solid #e3eaed;padding-top:12px}
+.experience-details summary{display:flex;align-items:center;gap:8px;width:max-content;max-width:100%;list-style:none;color:var(--navy);font-size:.75rem;font-weight:800;cursor:pointer}
+.experience-details summary::-webkit-details-marker{display:none}
+.experience-details summary::before{content:"+";display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:#e7f2f1;color:var(--teal);font-size:.9rem}
+.experience-details[open] summary::before{content:"−"}
+.experience-details summary span{display:inline-flex;align-items:center;justify-content:center;min-width:21px;height:21px;padding:0 6px;border-radius:999px;background:#f0f3f5;color:#70808a;font-size:.64rem}
+.experience-details ul{margin:13px 0 2px 20px!important;padding:0}
+.experience-details li{padding-left:3px;color:#5b6b75!important;font-size:.82rem!important;line-height:1.55!important}
+.experience-details li+li{margin-top:7px!important}
+.experience-photo-strip{display:grid;grid-template-columns:repeat(4,76px);gap:7px;margin-top:16px}
+.experience-photo-strip button{width:76px;height:56px;padding:0;border:0;border-radius:5px;overflow:hidden;background:#edf1f3}
+.experience-photo-strip img{width:100%;height:100%;object-fit:cover;display:block}
+
+@media(max-width:760px){
+ .experience-head{grid-template-columns:1fr;gap:10px}
+ .experience-meta{justify-items:start;min-width:0;text-align:left}
+ .experience-card-body{padding:21px 19px 20px 23px!important}
+ .experience-photo-strip{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .experience-photo-strip button{width:100%;height:52px}
+ .skills-section .content-card-skills .tags span{font-size:.7rem}
+}
