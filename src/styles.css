@@ -20,6 +20,8 @@ button{cursor:pointer}
 .navlinks{display:flex;gap:24px;align-items:center;font-size:.78rem;font-weight:700;color:#53606c}
 .navlinks a{padding:9px 0;border-bottom:2px solid transparent}
 .navlinks a:hover{color:var(--navy);border-bottom-color:var(--navy)}
+.portfolio-cover{height:280px;overflow:hidden;border-bottom:1px solid var(--line);background:#eef1f3}
+.portfolio-cover img{width:100%;height:100%;object-fit:cover;display:block}
 .hero{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(245px,.7fr);gap:54px;align-items:center;padding:74px 64px 68px;border-bottom:1px solid var(--line);background:#fff}
 .hero-copy{max-width:690px}
 .eyebrow,.section-heading .kicker{font-size:.68rem;letter-spacing:.17em;font-weight:800;color:var(--blue);text-transform:uppercase}
@@ -33,6 +35,8 @@ button{cursor:pointer}
 .secondary:hover{background:#f7f8f9}
 .academic-profile{align-self:stretch;display:flex;flex-direction:column;justify-content:center;gap:0;padding:26px;border-left:1px solid var(--line);background:#fbfbfc}
 .profile-monogram{display:grid;place-items:center;width:82px;height:82px;margin-bottom:22px;border-radius:50%;background:#e9eef3;color:var(--navy);font-family:Georgia,"Times New Roman",serif;font-size:1.7rem;border:1px solid #d5dce2}
+.profile-photo{width:96px;height:96px;margin-bottom:22px;border-radius:50%;overflow:hidden;border:3px solid #fff;box-shadow:0 0 0 1px #d5dce2}
+.profile-photo img{width:100%;height:100%;object-fit:cover;display:block}
 .academic-profile>div:not(.profile-monogram){display:grid;gap:3px;padding:13px 0;border-top:1px solid #e5e8eb}
 .academic-profile span{font-size:.64rem;text-transform:uppercase;letter-spacing:.11em;color:#858e97}
 .academic-profile b{font-family:Georgia,"Times New Roman",serif;font-size:.9rem;font-weight:600;line-height:1.35;color:#293746}
@@ -133,6 +137,18 @@ button{cursor:pointer}
 .admin-media-grid button{margin:2px;border:1px solid var(--line);background:#fff;border-radius:5px;padding:5px}
 .profile-form{max-width:900px}
 .profile-visibility-note{grid-column:1/-1;display:flex;gap:10px;align-items:baseline;padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.profile-assets{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.profile-asset-card{display:grid;align-content:start;gap:10px;padding:15px;border:1px solid var(--line);border-radius:9px;background:#fff}
+.profile-asset-card p{margin:0;color:var(--muted);font-size:.73rem;line-height:1.45}
+.asset-preview{display:grid;place-items:center;overflow:hidden;background:#eef1f3;border:1px dashed #cbd3da;color:#7a858e}
+.asset-preview img{width:100%;height:100%;object-fit:cover;display:block}
+.profile-preview{width:112px;height:112px;border-radius:50%;font-family:Georgia,"Times New Roman",serif;font-size:1.8rem;color:var(--navy)}
+.cover-preview{width:100%;height:145px;border-radius:6px;text-align:center;padding:12px;font-size:.72rem}
+.asset-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.asset-actions label{display:inline-flex!important;width:max-content;text-transform:none!important;color:var(--navy)!important}
+.asset-actions input[type="file"]{display:none}
+.asset-message{grid-column:1/-1;padding:9px 11px;border-radius:6px;background:#eef5f8;color:#31566f;font-size:.75rem;font-weight:650}
+.danger{color:#9a3d3d!important}
 .profile-visibility-note b{color:var(--ink);font-family:Georgia,"Times New Roman",serif}
 .profile-visibility-note span{color:var(--muted);font-size:.76rem}
 .profile-field{display:grid;gap:6px}
@@ -188,7 +204,7 @@ button{cursor:pointer}
  .admin-main{padding:22px}
  .admin-list article{grid-template-columns:1fr auto}
  .editor-fields,.profile-form,.media-form{grid-template-columns:1fr}
- .editor-fields label:has(textarea),.profile-form label:has(textarea),.media-form textarea{grid-column:auto}\n .profile-field:has(textarea),.profile-visibility-note{grid-column:auto}
+ .editor-fields label:has(textarea),.profile-form label:has(textarea),.media-form textarea{grid-column:auto}\n .profile-field:has(textarea),.profile-visibility-note,.profile-assets,.asset-message{grid-column:auto}\n .profile-assets{grid-template-columns:1fr}\n .portfolio-cover{height:190px}
  .admin-media-grid{grid-template-columns:1fr}
  .lightbox{padding:60px 12px}
 }
