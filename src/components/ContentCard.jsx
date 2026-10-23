@@ -7,12 +7,12 @@ export default function ContentCard({item,media=[],onOpenMedia}){
 
  if(item.section==="training"){
   return <article className="training-card">
-   <div className="training-mark"><span>PD</span></div>
+   <div className="training-mark" aria-hidden="true"><span>✓</span></div>
    <div className="training-content">
-    <div className="training-top">
+    {(d.issuer||d.year)&&<div className="training-top">
      {d.issuer&&<span className="training-provider">{d.issuer}</span>}
      {d.year&&<time>{d.year}</time>}
-    </div>
+    </div>}
     <h3>{d.title||"Professional Training"}</h3>
     {d.description&&<p>{d.description}</p>}
    </div>
