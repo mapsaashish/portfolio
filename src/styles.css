@@ -293,3 +293,23 @@ button{cursor:pointer}
  .highlight-grid{grid-template-columns:1fr}
  .highlight-card{min-height:0}
 }
+
+
+/* Training & professional development */
+.section-training{background:linear-gradient(180deg,#f8fafb 0%,#f3f7f8 100%)}
+.section-training .grid.two{gap:12px}
+.training-card{display:grid;grid-template-columns:54px minmax(0,1fr);gap:17px;align-items:start;min-height:150px;padding:21px 22px;border:1px solid #d8e3e6;border-radius:9px;background:#fff;box-shadow:0 3px 12px rgba(18,59,85,.035);transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease}
+.training-card:hover{border-color:#aacccd;box-shadow:0 8px 22px rgba(18,59,85,.075);transform:translateY(-2px)}
+.training-mark{display:grid;place-items:center;width:54px;height:54px;border-radius:12px;background:linear-gradient(145deg,var(--navy),#236f75);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
+.training-mark span{color:#fff;font-family:Georgia,"Times New Roman",serif;font-size:.83rem;font-weight:700;letter-spacing:.05em}
+.training-content{min-width:0}
+.training-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
+.training-provider{color:var(--teal);font-size:.65rem;font-weight:850;letter-spacing:.065em;text-transform:uppercase;line-height:1.35}
+.training-top time{flex:none;padding:4px 8px;border-radius:999px;background:#eef4f5;color:#60717b;font-size:.65rem;font-weight:750}
+.training-card h3{margin:0;color:var(--ink);font-family:Georgia,"Times New Roman",serif;font-size:1.02rem;line-height:1.35}
+.training-card p{margin:9px 0 0;color:#667780;font-size:.76rem;line-height:1.55}
+@media(max-width:760px){
+ .training-card{grid-template-columns:46px minmax(0,1fr);gap:14px;padding:18px}
+ .training-mark{width:46px;height:46px;border-radius:10px}
+ .training-top{align-items:flex-start;flex-direction:column;gap:5px}
+}
