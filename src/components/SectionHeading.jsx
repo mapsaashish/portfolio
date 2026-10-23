@@ -1,0 +1,1 @@
+export default function SectionHeading({kicker,title,text}){return <header className="section-heading"><div className="kicker">{kicker}</div><h2>{title}</h2>{text&&<p>{text}</p>}</header>}
