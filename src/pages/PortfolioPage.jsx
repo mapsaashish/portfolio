@@ -15,12 +15,13 @@ export default function PortfolioPage(){
 
  const s=p.settings||{};
  const gallery=p.media.filter(m=>m.show_in_gallery&&m.published);
+ const show=key=>s.profile_visibility?.[key]!==false;
  const open=(items,index=0)=>setViewer({items,index});
  const gridClass=sec=>sec==="experience"||sec==="education"||sec==="current_roles"?"grid one":sec==="projects"?"grid two":"grid two";
 
  return <div className="site-shell">
   <nav className="topnav">
-   <a className="brand" href="#top"><span>AS</span><div><b>{s.name||"Aashish Sharma"}</b><small>Geospatial Researcher</small></div></a>
+   <a className="brand" href="#top"><span>AS</span><div><b>{show("name")?(s.name||"Aashish Sharma"):"Portfolio"}</b><small>Geospatial Researcher</small></div></a>
    <div className="navlinks">
     <a href="#projects">Projects</a>
     <a href="#research">Research</a>
@@ -34,13 +35,15 @@ export default function PortfolioPage(){
    <section className="hero">
     <div className="hero-copy">
      <div className="eyebrow">GEOMATICS · GIS · REMOTE SENSING</div>
-     <h1>{s.name||"Aashish Sharma"}</h1>
-     <h2>{s.headline||"Geomatics Engineer · Graduate Research Assistant · M.S. Civil Engineering"}</h2>
-     <p>{s.intro}</p>
+     {show("name")&&<h1>{s.name||"Aashish Sharma"}</h1>}
+     {show("headline")&&<h2>{s.headline||"Geomatics Engineer · Graduate Research Assistant · M.S. Civil Engineering"}</h2>}
+     {show("intro")&&s.intro&&<p>{s.intro}</p>}
      <div className="hero-actions">
       <a className="btn primary" href="#projects">View selected work</a>
-      {s.email&&<a className="btn secondary" href={"mailto:"+s.email}>Email</a>}
-      {s.github_url&&<a className="btn secondary" href={s.github_url} target="_blank" rel="noreferrer">GitHub</a>}
+      {show("email")&&s.email&&<a className="btn secondary" href={"mailto:"+s.email}>Email</a>}
+      {show("cv_url")&&s.cv_url&&<a className="btn secondary" href={s.cv_url} target="_blank" rel="noreferrer">CV</a>}
+      {show("linkedin_url")&&s.linkedin_url&&<a className="btn secondary" href={s.linkedin_url} target="_blank" rel="noreferrer">LinkedIn</a>}
+      {show("github_url")&&s.github_url&&<a className="btn secondary" href={s.github_url} target="_blank" rel="noreferrer">GitHub</a>}
      </div>
     </div>
     <aside className="academic-profile">
@@ -53,10 +56,10 @@ export default function PortfolioPage(){
       <span>Affiliation</span>
       <b>Florida Atlantic University</b>
      </div>
-     <div>
+     {show("location")&&<div>
       <span>Based in</span>
       <b>{s.location||"Boca Raton, Florida"}</b>
-     </div>
+     </div>}
     </aside>
    </section>
 
@@ -94,20 +97,20 @@ export default function PortfolioPage(){
     </section>
    }
 
-   <section id="contact" className="contact">
+   {(show("contact_heading")||show("contact_text")||(show("email")&&s.email)||(show("linkedin_url")&&s.linkedin_url))&&<section id="contact" className="contact">
     <div>
      <div className="eyebrow">CONTACT</div>
-     <h2>{s.contact_heading||"Let's connect."}</h2>
-     <p>{s.contact_text}</p>
+     {show("contact_heading")&&<h2>{s.contact_heading||"Let's connect."}</h2>}
+     {show("contact_text")&&s.contact_text&&<p>{s.contact_text}</p>}
     </div>
     <div className="contact-actions">
-     {s.email&&<a className="btn primary" href={"mailto:"+s.email}>{s.email}</a>}
-     {s.linkedin_url&&<a className="text-link" href={s.linkedin_url} target="_blank" rel="noreferrer">LinkedIn ↗</a>}
+     {show("email")&&s.email&&<a className="btn primary" href={"mailto:"+s.email}>{s.email}</a>}
+     {show("linkedin_url")&&s.linkedin_url&&<a className="text-link" href={s.linkedin_url} target="_blank" rel="noreferrer">LinkedIn ↗</a>}
     </div>
-   </section>
+   </section>}
   </main>
 
-  <footer><span>© {new Date().getFullYear()} {s.name||"Aashish Sharma"}</span><span>Geomatics · GIS · Remote Sensing</span><a href="?admin=1">Admin</a></footer>
+  <footer><span>© {new Date().getFullYear()} {show("name")?(s.name||"Aashish Sharma"):"Portfolio"}</span><span>Geomatics · GIS · Remote Sensing</span><a href="?admin=1">Admin</a></footer>
   {viewer&&<Lightbox items={viewer.items} index={viewer.index} onIndex={index=>setViewer(v=>({...v,index}))} onClose={()=>setViewer(null)}/>}
  </div>
 }
