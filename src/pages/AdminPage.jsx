@@ -1,6 +1,6 @@
 import {useEffect,useMemo,useState} from "react";
 import {supabase} from "../lib/supabase";
-import {deleteItem,deleteMedia,ensurePortfolioBucket,fieldConfig,getAdminContent,saveItem,saveItemOrder,saveMediaMeta,saveSettings,sectionLabels,uploadMedia} from "../lib/content";
+import {deleteItem,deleteMedia,ensurePortfolioBucket,fieldConfig,getAdminContent,removeStorageFile,saveItem,saveItemOrder,saveMediaMeta,saveSettings,sectionLabels,uploadMedia,uploadProfileAsset} from "../lib/content";
 const sections=Object.keys(sectionLabels),photoSections=new Set(["current_roles","experience","education","projects","research"]);
 function Login({done}){const[create,setCreate]=useState(false),[pw,setPw]=useState(""),[pw2,setPw2]=useState(""),[msg,setMsg]=useState("");async function submit(e){e.preventDefault();setMsg("");try{if(create){if(pw.length<8)throw new Error("Use at least 8 characters.");if(pw!==pw2)throw new Error("Passwords do not match.");const r=await supabase.auth.signUp({email:"mapsaashish@gmail.com",password:pw,options:{emailRedirectTo:window.location.origin+"/portfolio/?admin=1"}});if(r.error)throw r.error;if(!r.data.session){setMsg("Account created. Confirm the email sent to mapsaashish@gmail.com, then sign in.");setCreate(false);return}}else{const r=await supabase.auth.signInWithPassword({email:"mapsaashish@gmail.com",password:pw});if(r.error)throw r.error}await ensurePortfolioBucket();done()}catch(e){setMsg(e.message)}}return <main className="admin-login"><form onSubmit={submit}><div className="brand-mark">AS</div><h1>{create?"Create portfolio admin":"Portfolio Admin"}</h1><p>Manage your CV, projects, experience photos, and public gallery.</p><label>Email<input value="mapsaashish@gmail.com" readOnly/></label><label>Password<input type="password" value={pw} onChange={e=>setPw(e.target.value)} required/></label>{create&&<label>Confirm password<input type="password" value={pw2} onChange={e=>setPw2(e.target.value)} required/></label>}{msg&&<div className="notice">{msg}</div>}<button className="btn primary">{create?"Create admin account":"Sign in"}</button><button type="button" className="text-button" onClick={()=>setCreate(!create)}>{create?"I already have an account":"First time? Create admin account"}</button></form></main>}
 function MediaManager({contentId=null,media,setMedia,gallery=false}){const[file,setFile]=useState(null),[form,setForm]=useState({title:"",caption:"",alt_text:"",location:"",taken_at:"",show_in_gallery:gallery,is_cover:false,published:true}),[msg,setMsg]=useState("");const relevant=gallery?media.filter(m=>m.show_in_gallery):media.filter(m=>m.content_id===contentId);async function send(e){e.preventDefault();try{const x=await uploadMedia(file,{...form,content_id:gallery?null:contentId,show_in_gallery:gallery||form.show_in_gallery});setMedia([...media,x]);setFile(null);setMsg("Photo uploaded.")}catch(e){setMsg(e.message)}}async function patch(x,c){if(c.is_cover&&x.content_id)await supabase.from("media_items").update({is_cover:false}).eq("content_id",x.content_id);const y=await saveMediaMeta(x.id,c);setMedia(media.map(m=>m.id===x.id?y:(c.is_cover&&m.content_id===x.content_id?{...m,is_cover:false}:m)));}async function remove(x){if(!confirm("Delete this photo permanently?"))return;await deleteMedia(x);setMedia(media.filter(m=>m.id!==x.id))}return <div className="media-manager"><h3>{gallery?"Photo Gallery":"Experience sharing photos"}</h3><p>{gallery?"Upload standalone fieldwork, research, conference, UAV, map, and professional photos.":"Attach photos to this item, select a cover image, and optionally feature them in the main gallery."}</p><form className="media-form" onSubmit={send}><input type="file" accept="image/jpeg,image/png,image/webp,image/gif" onChange={e=>setFile(e.target.files?.[0]||null)}/><input placeholder="Photo title" value={form.title} onChange={e=>setForm({...form,title:e.target.value})}/><input placeholder="Location" value={form.location} onChange={e=>setForm({...form,location:e.target.value})}/><input type="date" value={form.taken_at} onChange={e=>setForm({...form,taken_at:e.target.value})}/><input placeholder="Alt text" value={form.alt_text} onChange={e=>setForm({...form,alt_text:e.target.value})}/><textarea placeholder="Caption: what was happening and why it mattered" value={form.caption} onChange={e=>setForm({...form,caption:e.target.value})}/>{!gallery&&<><label><input type="checkbox" checked={form.is_cover} onChange={e=>setForm({...form,is_cover:e.target.checked})}/> Use as cover image</label><label><input type="checkbox" checked={form.show_in_gallery} onChange={e=>setForm({...form,show_in_gallery:e.target.checked})}/> Also show in Photo Gallery</label></>}<button className="btn primary">Upload photo</button></form>{msg&&<small>{msg}</small>}<div className="admin-media-grid">{relevant.map(x=><article key={x.id}><img src={x.public_url}/><b>{x.title||"Untitled photo"}</b><small>{x.caption}</small><div>{!gallery&&!x.is_cover&&<button onClick={()=>patch(x,{is_cover:true})}>Set cover</button>}{!gallery&&<button onClick={()=>patch(x,{show_in_gallery:!x.show_in_gallery})}>{x.show_in_gallery?"Remove gallery":"Add gallery"}</button>}<button onClick={()=>remove(x)}>Delete</button></div></article>)}</div></div>}
@@ -11,13 +11,58 @@ function Profile({settings,onSaved}){
   ["intro","Introduction"],["cv_url","CV URL"],["linkedin_url","LinkedIn URL"],["github_url","GitHub URL"],
   ["contact_heading","Contact heading"],["contact_text","Contact text"]
  ];
- const[f,setF]=useState(settings||{});
+ const[f,setF]=useState(settings||{}),[assetMsg,setAssetMsg]=useState("");
  useEffect(()=>setF(settings||{}),[settings]);
  const visible=key=>f.profile_visibility?.[key]!==false;
  function toggle(key){setF({...f,profile_visibility:{...(f.profile_visibility||{}),[key]:!visible(key)}})}
- async function submit(e){e.preventDefault();try{onSaved(await saveSettings(f))}catch(e){alert(e.message)}}
+ async function submit(e){e.preventDefault();try{const x=await saveSettings(f);setF(x);onSaved(x)}catch(e){alert(e.message)}}
+ async function uploadAsset(file,kind){
+  if(!file)return;
+  setAssetMsg("Uploading "+kind+" image…");
+  try{
+   const oldPath=kind==="profile"?f.profile_image_path:f.cover_image_path;
+   const asset=await uploadProfileAsset(file,kind);
+   const next={...f,
+    [kind+"_image_url"]:asset.publicUrl,
+    [kind+"_image_path"]:asset.path,
+    profile_visibility:{...(f.profile_visibility||{}),[kind+"_image"]:true}
+   };
+   const saved=await saveSettings(next);
+   setF(saved);onSaved(saved);
+   if(oldPath&&oldPath!==asset.path){try{await removeStorageFile(oldPath)}catch{}}
+   setAssetMsg((kind==="profile"?"Profile photo":"Cover photo")+" uploaded and published.");
+  }catch(e){setAssetMsg(e.message)}
+ }
+ async function removeAsset(kind){
+  if(!confirm("Remove this "+kind+" image from the portfolio?"))return;
+  setAssetMsg("Removing image…");
+  try{
+   const oldPath=kind==="profile"?f.profile_image_path:f.cover_image_path;
+   const next={...f,[kind+"_image_url"]:null,[kind+"_image_path"]:null};
+   const saved=await saveSettings(next);
+   if(oldPath)await removeStorageFile(oldPath);
+   setF(saved);onSaved(saved);setAssetMsg("Image removed.");
+  }catch(e){setAssetMsg(e.message)}
+ }
  return <form className="profile-form" onSubmit={submit}>
   <div className="profile-visibility-note"><b>Public profile visibility</b><span>Keep information saved in the CMS while choosing exactly what visitors can see.</span></div>
+
+  <div className="profile-assets">
+   <div className="profile-asset-card">
+    <div className="profile-field-head"><span>Profile Photo</span><label className="visibility-toggle"><input type="checkbox" checked={visible("profile_image")} onChange={()=>toggle("profile_image")}/><span>{visible("profile_image")?"Shown":"Hidden"}</span></label></div>
+    <div className="asset-preview profile-preview">{f.profile_image_url?<img src={f.profile_image_url} alt="Current profile"/>:<span>AS</span>}</div>
+    <p>Square portrait recommended. It will appear in the academic profile area.</p>
+    <div className="asset-actions"><label className="btn secondary">Upload / Replace<input type="file" accept="image/jpeg,image/png,image/webp" onChange={e=>uploadAsset(e.target.files?.[0],"profile")}/></label>{f.profile_image_url&&<button type="button" className="text-button danger" onClick={()=>removeAsset("profile")}>Remove</button>}</div>
+   </div>
+   <div className="profile-asset-card">
+    <div className="profile-field-head"><span>Cover Photo</span><label className="visibility-toggle"><input type="checkbox" checked={visible("cover_image")} onChange={()=>toggle("cover_image")}/><span>{visible("cover_image")?"Shown":"Hidden"}</span></label></div>
+    <div className="asset-preview cover-preview">{f.cover_image_url?<img src={f.cover_image_url} alt="Current cover"/>:<span>Wide research, fieldwork, UAV, LiDAR, or campus image</span>}</div>
+    <p>Wide landscape image recommended. It will appear above your portfolio introduction.</p>
+    <div className="asset-actions"><label className="btn secondary">Upload / Replace<input type="file" accept="image/jpeg,image/png,image/webp" onChange={e=>uploadAsset(e.target.files?.[0],"cover")}/></label>{f.cover_image_url&&<button type="button" className="text-button danger" onClick={()=>removeAsset("cover")}>Remove</button>}</div>
+   </div>
+  </div>
+  {assetMsg&&<div className="asset-message">{assetMsg}</div>}
+
   {fields.map(([k,label])=><div className={"profile-field "+(!visible(k)?"profile-field-hidden":"")} key={k}>
    <div className="profile-field-head"><span>{label}</span><label className="visibility-toggle"><input type="checkbox" checked={visible(k)} onChange={()=>toggle(k)}/><span>{visible(k)?"Shown":"Hidden"}</span></label></div>
    {["intro","contact_text"].includes(k)?<textarea value={f[k]||""} onChange={e=>setF({...f,[k]:e.target.value})}/>:<input value={f[k]||""} onChange={e=>setF({...f,[k]:e.target.value})}/>}
