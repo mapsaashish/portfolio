@@ -32,6 +32,7 @@ export default function PortfolioPage(){
   </nav>
 
   <main id="top" className="public-main">
+   {show("cover_image")&&s.cover_image_url&&<div className="portfolio-cover"><img src={s.cover_image_url} alt="Portfolio cover"/></div>}
    <section className="hero">
     <div className="hero-copy">
      <div className="eyebrow">GEOMATICS · GIS · REMOTE SENSING</div>
@@ -47,7 +48,7 @@ export default function PortfolioPage(){
      </div>
     </div>
     <aside className="academic-profile">
-     <div className="profile-monogram">AS</div>
+     {show("profile_image")&&s.profile_image_url?<div className="profile-photo"><img src={s.profile_image_url} alt={(show("name")&&s.name)?s.name+" profile photo":"Profile photo"}/></div>:<div className="profile-monogram">AS</div>}
      <div>
       <span>Current focus</span>
       <b>Photogrammetry, LiDAR & UAV Mapping</b>
