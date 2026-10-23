@@ -1,6 +1,7 @@
 import {supabase} from "./supabase";
-export const sectionLabels={current_roles:"Current Roles",experience:"Experience",education:"Education",projects:"Projects",skills:"Skills",research:"Research",publications:"Publications",certifications:"Certifications",training:"Training",awards:"Awards"};
+export const sectionLabels={highlights:"Career Highlights",current_roles:"Current Roles",experience:"Experience",education:"Education",projects:"Projects",skills:"Skills",research:"Research",publications:"Publications",certifications:"Certifications",training:"Training",awards:"Awards"};
 export const fieldConfig={
+highlights:[["title","Highlight title"],["metric","Featured number / label"],["kicker","Small label"],["description","Description","textarea"]],
 current_roles:[["title","Title"],["organization","Organization"],["unit","Department / Unit"],["location","Location"],["period","Period"],["description","Description","textarea"],["highlights","Highlights","list"]],
 experience:[["title","Job title"],["organization","Organization"],["location","Location"],["period","Period"],["description","Summary","textarea"],["highlights","Highlights","list"]],
 education:[["degree","Degree"],["institution","Institution"],["location","Location"],["period","Period"],["score","Score / GPA"],["description","Details","textarea"],["coursework","Coursework","list"]],
