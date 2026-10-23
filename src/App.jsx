@@ -1,0 +1,1 @@
+import AdminPage from "./pages/AdminPage";import PortfolioPage from "./pages/PortfolioPage";export default function App(){return new URLSearchParams(window.location.search).get("admin")==="1"?<AdminPage/>:<PortfolioPage/>}
