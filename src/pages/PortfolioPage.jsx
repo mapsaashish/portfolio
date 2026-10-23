@@ -1,0 +1,20 @@
+import {useEffect,useMemo,useState} from "react";
+import {getPublicContent,sectionLabels} from "../lib/content";
+import ContentCard from "../components/ContentCard";
+import Lightbox from "../components/Lightbox";
+import SectionHeading from "../components/SectionHeading";
+const order=["current_roles","projects","research","experience","education","publications","certifications","training","awards"];
+export default function PortfolioPage(){
+ const[p,setP]=useState({settings:null,items:[],media:[]}),[loading,setLoading]=useState(true),[error,setError]=useState(""),[viewer,setViewer]=useState(null);
+ useEffect(()=>{getPublicContent().then(setP).catch(e=>setError(e.message)).finally(()=>setLoading(false))},[]);
+ const groups=useMemo(()=>{const g={};p.items.forEach(i=>(g[i.section]??=[]).push(i));return g},[p.items]);
+ if(loading)return <main className="center-screen">Loading portfolio…</main>;if(error)return <main className="center-screen">{error}</main>;
+ const s=p.settings||{},gallery=p.media.filter(m=>m.show_in_gallery&&m.published),open=(items,index=0)=>setViewer({items,index});
+ return <><nav className="topnav"><a className="brand" href="#top"><span>AS</span>Aashish Sharma</a><div><a href="#projects">Projects</a><a href="#research">Research</a><a href="#experience">Experience</a>{gallery.length>0&&<a href="#gallery">Gallery</a>}<a href="#skills">Skills</a><a href="#contact">Contact</a></div></nav><main id="top">
+ <section className="hero"><div><div className="eyebrow">GEOSPATIAL RESEARCH · APPLIED GIS</div><h1>{s.name||"Aashish Sharma"}</h1><h2>{s.headline||"Geomatics Engineer · Graduate Research Assistant · M.S. Civil Engineering"}</h2><p>{s.intro}</p><div className="hero-actions"><a className="btn primary" href="#projects">Explore selected work</a>{s.email&&<a className="btn secondary" href={"mailto:"+s.email}>Email me</a>}{s.github_url&&<a className="btn secondary" href={s.github_url} target="_blank">GitHub</a>}</div></div><div className="geo-visual"><div>SPATIAL DATA · TERRAIN · POINT CLOUDS</div><b>FROM ACQUISITION<br/>TO CONFIDENCE.</b><span>GIS · UAV · PHOTOGRAMMETRY · LiDAR</span></div></section>
+ {order.map(sec=>groups[sec]?.length>0&&<section id={sec} key={sec} className={sec==="projects"?"tinted":""}><SectionHeading kicker={sectionLabels[sec]} title={sec==="projects"?"Selected work with real geospatial impact.":sec==="research"?"Research interests and active directions.":sec==="experience"?"Professional experience across research, UN programs, and consulting.":sectionLabels[sec]}/><div className={"grid "+(["projects","experience"].includes(sec)?"three":"two")}>{groups[sec].map(i=><ContentCard key={i.id} item={i} media={p.media} onOpenMedia={open}/>)}</div></section>)}
+ {gallery.length>0&&<section id="gallery" className="gallery-section"><SectionHeading kicker="Photo gallery" title="Fieldwork, research, mapping, and professional moments." text="A visual record of projects, organizations, field activities, technical work, conferences, and geospatial experiences."/><div className="photo-gallery">{gallery.map((m,i)=><button key={m.id} onClick={()=>open(gallery,i)}><img src={m.public_url} alt={m.alt_text||m.title||"Portfolio gallery photo"}/><span>{m.title&&<b>{m.title}</b>}<small>{[m.location,m.taken_at].filter(Boolean).join(" · ")}</small></span></button>)}</div></section>}
+ {groups.skills?.length>0&&<section id="skills" className="tinted"><SectionHeading kicker="Technical toolkit" title="Skills from field acquisition through analysis and communication."/><div className="grid four">{groups.skills.map(i=><ContentCard key={i.id} item={i} media={[]} onOpenMedia={open}/>)}</div></section>}
+ <section id="contact" className="contact"><div><div className="eyebrow">LET'S CONNECT</div><h2>{s.contact_heading}</h2><p>{s.contact_text}</p></div>{s.email&&<a className="btn white" href={"mailto:"+s.email}>{s.email}</a>}</section>
+ </main><footer><span>© {new Date().getFullYear()} {s.name||"Aashish Sharma"}</span><a href="?admin=1">Admin</a></footer>{viewer&&<Lightbox items={viewer.items} index={viewer.index} onIndex={index=>setViewer(v=>({...v,index}))} onClose={()=>setViewer(null)}/>}</>
+}
