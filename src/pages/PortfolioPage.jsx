@@ -4,7 +4,7 @@ import ContentCard from "../components/ContentCard";
 import Lightbox from "../components/Lightbox";
 import SectionHeading from "../components/SectionHeading";
 
-const order=["current_roles","projects","research","experience","education","publications","certifications","training","awards"];
+const order=["highlights","current_roles","projects","research","experience","education","publications","certifications","training","awards"];
 
 export default function PortfolioPage(){
  const[p,setP]=useState({settings:null,items:[],media:[]}),[loading,setLoading]=useState(true),[error,setError]=useState(""),[viewer,setViewer]=useState(null);
@@ -68,12 +68,20 @@ export default function PortfolioPage(){
     <section id={sec} key={sec} className={"content-section section-"+sec}>
      <SectionHeading
       kicker={sectionLabels[sec]}
-      title={sec==="projects"?"Selected Projects":sec==="research"?"Research Interests":sec==="experience"?"Professional Experience":sectionLabels[sec]}
-      text={sec==="projects"?"Selected research and applied geospatial work.":sec==="research"?"Current and emerging areas of academic and technical interest.":sec==="experience"?"Professional work across research, international development, disaster risk reduction, and geospatial consulting.":undefined}
+      title={sec==="highlights"?"Field Impact & Capacity Building":sec==="projects"?"Selected Projects":sec==="research"?"Research Interests":sec==="experience"?"Professional Experience":sectionLabels[sec]}
+      text={sec==="highlights"?"Selected highlights from field assignments, international development work, and geospatial capacity building across Nepal.":sec==="projects"?"Selected research and applied geospatial work.":sec==="research"?"Current and emerging areas of academic and technical interest.":sec==="experience"?"Professional work across research, international development, disaster risk reduction, and geospatial consulting.":undefined}
      />
-     <div className={gridClass(sec)}>
+     {sec==="highlights"?<div className="highlight-grid">
+      {groups[sec].map((i,index)=><article className="highlight-card" key={i.id}>
+       <span className="highlight-index">{String(index+1).padStart(2,"0")}</span>
+       {i.data?.kicker&&<small>{i.data.kicker}</small>}
+       {i.data?.metric&&<strong>{i.data.metric}</strong>}
+       <h3>{i.data?.title}</h3>
+       {i.data?.description&&<p>{i.data.description}</p>}
+      </article>)}
+     </div>:<div className={gridClass(sec)}>
       {groups[sec].map(i=><ContentCard key={i.id} item={i} media={p.media} onOpenMedia={open}/>)}
-     </div>
+     </div>}
     </section>
    )}
 
