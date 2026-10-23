@@ -5,6 +5,20 @@ export default function ContentCard({item,media=[],onOpenMedia}){
  const pics=media.filter(m=>m.content_id===item.id&&m.published);
  const cover=pics.find(m=>m.is_cover)||pics[0];
 
+ if(item.section==="training"){
+  return <article className="training-card">
+   <div className="training-mark"><span>PD</span></div>
+   <div className="training-content">
+    <div className="training-top">
+     {d.issuer&&<span className="training-provider">{d.issuer}</span>}
+     {d.year&&<time>{d.year}</time>}
+    </div>
+    <h3>{d.title||"Professional Training"}</h3>
+    {d.description&&<p>{d.description}</p>}
+   </div>
+  </article>
+ }
+
  if(item.section==="experience"){
   return <article className="content-card content-card-experience">
    <div className="experience-card-body">
