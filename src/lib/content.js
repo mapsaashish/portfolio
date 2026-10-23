@@ -18,6 +18,19 @@ export async function deleteItem(id){const{error}=await supabase.from("content_i
 export async function saveItemOrder(orderedItems){const updates=orderedItems.map((item,index)=>supabase.from("content_items").update({sort_order:(index+1)*10}).eq("id",item.id).select("id,sort_order").single());const results=await Promise.all(updates);const failed=results.find(r=>r.error);if(failed)throw failed.error;return results.map(r=>r.data)}
 export async function saveSettings(x){const p={...x,updated_at:new Date().toISOString()};delete p.created_at;if(x.id){const{data,error}=await supabase.from("site_settings").update(p).eq("id",x.id).select().single();if(error)throw error;return data}delete p.id;const{data,error}=await supabase.from("site_settings").insert(p).select().single();if(error)throw error;return data}
 export async function ensurePortfolioBucket(){const{data}=await supabase.storage.getBucket("portfolio-media");if(data)return data;const r=await supabase.storage.createBucket("portfolio-media",{public:true,fileSizeLimit:8388608,allowedMimeTypes:["image/jpeg","image/png","image/webp","image/gif"]});if(r.error&&!r.error.message.toLowerCase().includes("already"))throw r.error;return r.data}
+export async function uploadProfileAsset(file,kind){
+ if(!file)throw new Error("Choose an image.");
+ if(file.size>8388608)throw new Error("Image must be 8 MB or smaller.");
+ if(!["profile","cover"].includes(kind))throw new Error("Invalid profile image type.");
+ const{data:u}=await supabase.auth.getUser();if(!u.user)throw new Error("Sign in first.");
+ const ext=(file.name.split(".").pop()||"jpg").toLowerCase();
+ const path=u.user.id+"/profile/"+kind+"-"+crypto.randomUUID()+"."+ext;
+ const up=await supabase.storage.from("portfolio-media").upload(path,file,{contentType:file.type,cacheControl:"3600"});
+ if(up.error)throw up.error;
+ const publicUrl=supabase.storage.from("portfolio-media").getPublicUrl(path).data.publicUrl;
+ return{path,publicUrl};
+}
+export async function removeStorageFile(path){if(!path)return;const{error}=await supabase.storage.from("portfolio-media").remove([path]);if(error)throw error}
 export async function uploadMedia(file,meta={}){if(!file)throw new Error("Choose an image.");if(file.size>8388608)throw new Error("Image must be 8 MB or smaller.");const{data:u}=await supabase.auth.getUser();if(!u.user)throw new Error("Sign in first.");const ext=file.name.split(".").pop().toLowerCase(),path=u.user.id+"/"+crypto.randomUUID()+"."+ext;const up=await supabase.storage.from("portfolio-media").upload(path,file,{contentType:file.type});if(up.error)throw up.error;const url=supabase.storage.from("portfolio-media").getPublicUrl(path).data.publicUrl;if(meta.is_cover&&meta.content_id)await supabase.from("media_items").update({is_cover:false}).eq("content_id",meta.content_id);const{data,error}=await supabase.from("media_items").insert({...meta,storage_path:path,public_url:url,taken_at:meta.taken_at||null}).select().single();if(error)throw error;return data}
 export async function saveMediaMeta(id,changes){const{data,error}=await supabase.from("media_items").update(changes).eq("id",id).select().single();if(error)throw error;return data}
 export async function deleteMedia(item){if(item.storage_path)await supabase.storage.from("portfolio-media").remove([item.storage_path]);const{error}=await supabase.from("media_items").delete().eq("id",item.id);if(error)throw error}
