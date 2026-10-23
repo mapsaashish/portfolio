@@ -36,7 +36,9 @@ export default function ContentCard({item,media=[],onOpenMedia}){
    <h3>{d.title||d.degree||"Untitled"}</h3>
    {(d.organization||d.institution||d.issuer||d.venue)&&<b className="card-org">{d.organization||d.institution||d.issuer||d.venue}</b>}
    <small>{[d.period||d.year,d.location].filter(Boolean).join(" · ")}</small>
+   {item.section==="publications"&&d.authors&&<p className="publication-authors">{d.authors}</p>}
    {d.description&&<p>{d.description}</p>}
+   {item.section==="publications"&&d.link&&<a className="publication-link" href={d.link} target="_blank" rel="noreferrer">View paper ↗</a>}
    {Array.isArray(d.highlights)&&<ul>{d.highlights.filter(Boolean).map((x,i)=><li key={i}>{x}</li>)}</ul>}
    {Array.isArray(d.skills)&&<TagList items={d.skills}/>}
    {Array.isArray(d.coursework)&&<TagList items={d.coursework}/>}
